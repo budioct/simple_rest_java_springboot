@@ -72,4 +72,17 @@ public class PostServiceImpl implements PostService {
         return PostDTO.toPostResp(post);
     }
 
+    @Transactional
+    public void remove(PostDTO.PostRequestDetailDTO request) {
+        validation.validate(request);
+
+        PostEntity post = postRepository.
+                findFirstById(request.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+
+        postRepository.deleteById(post.getId());
+        //postRepository.delete(post);
+
+    }
+
 }

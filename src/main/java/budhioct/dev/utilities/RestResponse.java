@@ -16,6 +16,7 @@ public class RestResponse {
         private String message;
         private String errors;
         private restPagingResponse paging;
+        private Integer total_data;
         private T list;
     }
 

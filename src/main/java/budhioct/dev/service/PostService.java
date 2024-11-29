@@ -11,5 +11,6 @@ public interface PostService {
     PostDTO.PostResponseDTO createPost(PostDTO.PostRequestDTO request);
     PostDTO.PostResponseDTO detailPost(PostDTO.PostRequestDetailDTO request);
     PostDTO.PostResponseDTO updatePost(PostDTO.PostRequestUpdatetDTO request);
+    void remove(PostDTO.PostRequestDetailDTO request);
 
 }

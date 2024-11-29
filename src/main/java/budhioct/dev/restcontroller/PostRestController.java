@@ -26,6 +26,7 @@ public class PostRestController {
         Page<PostDTO.PostResponseDTO> postResponse = postService.getPosts(filter);
         return RestResponse.list.<List<PostDTO.PostResponseDTO>>builder()
                 .list(postResponse.getContent())
+                .total_data(postResponse.stream().toList().size())
                 .status_code(Constants.OK)
                 .message(Constants.ITEM_EXIST_MESSAGE)
                 .paging(RestResponse.restPagingResponse.builder()
@@ -77,6 +78,21 @@ public class PostRestController {
                 .status_code(Constants.OK)
                 .message(Constants.UPDATE_MESSAGE)
                 .build();
+    }
+
+    @DeleteMapping(
+            path = "/{id}/remove",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<String> removePost(@PathVariable(name = "id") long id, PostDTO.PostRequestDetailDTO request){
+        request.setId(id);
+        postService.remove(request);
+        return RestResponse.object.<String>builder()
+                .data("")
+                .status_code(Constants.OK)
+                .message(Constants.DELETE_MESSAGE)
+                .build();
+
     }
 
 }
