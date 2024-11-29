@@ -64,4 +64,19 @@ public class PostRestController {
                 .build();
     }
 
+    @PutMapping(
+            path = "/{id}/update",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<PostDTO.PostResponseDTO> updatePost(@PathVariable(name = "id") long id, @RequestBody PostDTO.PostRequestUpdatetDTO request){
+        request.setId(id);
+        PostDTO.PostResponseDTO postResponse = postService.updatePost(request);
+        return RestResponse.object.<PostDTO.PostResponseDTO>builder()
+                .data(postResponse)
+                .status_code(Constants.OK)
+                .message(Constants.UPDATE_MESSAGE)
+                .build();
+    }
+
 }

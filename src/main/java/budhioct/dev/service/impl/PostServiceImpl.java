@@ -58,4 +58,18 @@ public class PostServiceImpl implements PostService {
         return PostDTO.toPostResp(post);
     }
 
+    @Transactional
+    public PostDTO.PostResponseDTO updatePost(PostDTO.PostRequestUpdatetDTO request) {
+        validation.validate(request);
+
+        PostEntity post = postRepository
+                .findFirstById(request.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+
+        post.setTitle(request.getTitle());
+        postRepository.save(post);
+
+        return PostDTO.toPostResp(post);
+    }
+
 }

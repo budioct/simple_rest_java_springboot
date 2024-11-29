@@ -1,6 +1,7 @@
 package budhioct.dev.dto;
 
 import budhioct.dev.entity.PostEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -36,6 +37,16 @@ public class PostDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostRequestDTO{
+        @NotBlank private String title;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostRequestUpdatetDTO{
+        @JsonIgnore private long id;
         @NotBlank private String title;
     }
 
