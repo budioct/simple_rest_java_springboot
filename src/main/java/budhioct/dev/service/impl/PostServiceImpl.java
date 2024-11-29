@@ -27,7 +27,7 @@ public class PostServiceImpl implements PostService {
     public Page<PostDTO.PostResponseDTO> getPosts(Map<String, Object> filter) {
         Models<PostEntity> models = new Models<>();
         Page<PostEntity> postPage = postRepository.findAll(models.where(filter), models.pageableSort(filter));
-        List<PostDTO.PostResponseDTO> postResponseList = postPage.getContent().stream().map(PostDTO::toRespPost).toList();
+        List<PostDTO.PostResponseDTO> postResponseList = postPage.getContent().stream().map(PostDTO::toPostResp).toList();
 
         if (postResponseList.size() == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found");
@@ -44,7 +44,18 @@ public class PostServiceImpl implements PostService {
         post.setTitle(request.getTitle());
         postRepository.save(post);
 
-        return PostDTO.toRespPost(post);
+        return PostDTO.toPostResp(post);
+    }
+
+    @Transactional(readOnly = true)
+    public PostDTO.PostResponseDTO detailPost(PostDTO.PostRequestDetailDTO request) {
+        validation.validate(request);
+
+        PostEntity post = postRepository
+                .findFirstById(request.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+
+        return PostDTO.toPostResp(post);
     }
 
 }
