@@ -5,6 +5,7 @@ import budhioct.dev.dto.PostDTO;
 import budhioct.dev.entity.PostEntity;
 import budhioct.dev.repository.PostRepository;
 import budhioct.dev.service.PostService;
+import budhioct.dev.utilities.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Service
 public class PostServiceImpl implements PostService {
 
+    @Autowired private ValidationService validation;
     @Autowired private PostRepository postRepository;
 
     @Transactional(readOnly = true)
@@ -32,6 +34,17 @@ public class PostServiceImpl implements PostService {
         }
 
         return new PageImpl<>(postResponseList, postPage.getPageable(), postPage.getTotalPages());
+    }
+
+    @Transactional
+    public PostDTO.PostResponseDTO createPost(PostDTO.PostRequestDTO request) {
+        validation.validate(request);
+
+        PostEntity post = new PostEntity();
+        post.setTitle(request.getTitle());
+        postRepository.save(post);
+
+        return PostDTO.toRespPost(post);
     }
 
 }

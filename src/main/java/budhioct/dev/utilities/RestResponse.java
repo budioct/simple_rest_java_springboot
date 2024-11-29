@@ -24,10 +24,10 @@ public class RestResponse {
     @Data
     @Builder
     public static class object<T> {
-        private T data;
         private Integer status_code;
         private String message;
         private String errors;
+        private T data;
     }
 
     @Getter

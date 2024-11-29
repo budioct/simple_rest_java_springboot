@@ -7,10 +7,7 @@ import budhioct.dev.utilities.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +33,20 @@ public class PostRestController {
                         .totalPage(postResponse.getTotalPages())
                         .sizePage(postResponse.getSize())
                         .build())
+                .build();
+    }
+
+    @PostMapping(
+            path = "/create",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<PostDTO.PostResponseDTO> createPost(@RequestBody PostDTO.PostRequestDTO request){
+        PostDTO.PostResponseDTO postResponse = postService.createPost(request);
+        return RestResponse.object.<PostDTO.PostResponseDTO>builder()
+                .data(postResponse)
+                .status_code(Constants.OK)
+                .message(Constants.CREATE_MESSAGE)
                 .build();
     }
 
