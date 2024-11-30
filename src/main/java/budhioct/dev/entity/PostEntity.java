@@ -2,6 +2,7 @@ package budhioct.dev.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,5 +40,7 @@ public class PostEntity {
     private LocalDateTime updatedAt;
     @Column(name = "delete_at")
     private boolean deleteAt = Boolean.FALSE;
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
+    private List<PostCommentEntity> post_comments;
 
 }
