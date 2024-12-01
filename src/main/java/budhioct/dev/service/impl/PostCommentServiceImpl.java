@@ -24,7 +24,7 @@ public class PostCommentServiceImpl implements PostCommentService {
     @Transactional(readOnly = true)
     public Page<PostCommentDTO.PostCommentResponseDTO> getPostComments(Map<String, Object> filter) {
         Models<PostCommentEntity> models = new Models<>();
-        Page<PostCommentEntity> postCommentPage = postCommentRepository.findAll(models.where(filter), models.pageableSort(filter));
+        Page<PostCommentEntity> postCommentPage = postCommentRepository.findAll(models.where(filter), models.pageableSort(filter, PostCommentEntity.class));
         List<PostCommentDTO.PostCommentResponseDTO> postCommentResponseList = postCommentPage.getContent().stream().map(PostCommentDTO::toPostCommentResp).toList();
 
         if (postCommentResponseList.size() == 0) {

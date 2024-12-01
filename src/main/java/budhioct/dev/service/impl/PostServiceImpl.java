@@ -26,7 +26,7 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public Page<PostDTO.PostResponseDTO> getPosts(Map<String, Object> filter) {
         Models<PostEntity> models = new Models<>();
-        Page<PostEntity> postPage = postRepository.findAll(models.where(filter), models.pageableSort(filter));
+        Page<PostEntity> postPage = postRepository.findAll(models.where(filter), models.pageableSort(filter, PostEntity.class));
         List<PostDTO.PostResponseDTO> postResponseList = postPage.getContent().stream().map(PostDTO::toPostResp).toList();
 
         if (postResponseList.size() == 0) {
