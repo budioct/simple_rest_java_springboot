@@ -7,22 +7,19 @@ import budhioct.dev.utilities.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/post-comment")
+@RequestMapping("/api")
 public class PostCommentRestController {
 
     @Autowired private PostCommentService postCommentService;
 
     @GetMapping(
-            path = "/fetch",
+            path = "/post-comment/fetch",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public RestResponse.list<List<PostCommentDTO.PostCommentResponseDTO>> getPostComments(@RequestBody Map<String, Object> filter) {
@@ -38,6 +35,24 @@ public class PostCommentRestController {
                         .sizePage(postCommentResponse.getSize())
                         .build())
                 .build();
+    }
+
+    @GetMapping(
+            path = "/post/{post_id}/post-comment/{post_comment_id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<PostCommentDTO.PostCommentResponseDetailDTO> detailPostComment(@PathVariable(name = "post_id") long post_id,
+                                                                                              @PathVariable(name = "post_comment_id") long post_comment_id,
+                                                                                              PostCommentDTO.PostCommentRequestDetailDTO request) {
+        request.setPost_id(post_id);
+        request.setPost_comment_id(post_comment_id);
+        PostCommentDTO.PostCommentResponseDetailDTO postCommentResponse = postCommentService.detailPostComment(request);
+        return RestResponse.object.<PostCommentDTO.PostCommentResponseDetailDTO>builder()
+                .data(postCommentResponse)
+                .status_code(Constants.OK)
+                .message(Constants.ITEM_EXIST_MESSAGE)
+                .build();
+
     }
 
 }
