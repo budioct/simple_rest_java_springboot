@@ -1,14 +1,19 @@
 package budhioct.dev.common;
 
+import budhioct.dev.entity.PostEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @Slf4j
@@ -55,28 +60,46 @@ public class Models<T> {
 
     }
 
-    public PageRequest pageableSort(Map<String, Object> page) {
+    public PageRequest pageableSort(Map<String, Object> page, Class<?> entityClass) {
         int pageNumber = 0;
         int pageSize = 10;
         String sortPage = "createdAt";
 
-        if (page.containsKey("page") && page.get("page") != "") {
+        try {
+            if (page.containsKey("page") && page.get("page") != "") {
+                pageNumber = Integer.parseInt(page.get("page").toString());
+            }
 
-            pageNumber = Integer.parseInt(page.get("page").toString());
+            if (page.containsKey("size") && page.get("size") != "") {
+                pageSize = Integer.parseInt(page.get("size").toString());
+            }
+
+            if (page.containsKey("sort") && page.get("sort") != "") {
+                sortPage = String.valueOf(page.get("sort"));
+                if (!isValidSortField(entityClass, sortPage)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input, please enter a key from list of field");
+                }
+                return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Order.asc(sortPage)));
+            }
+
+            return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Order.desc(sortPage)));
+
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input, please enter a number");
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
-        if (page.containsKey("size") && page.get("size") != "") {
+    }
 
-            pageSize = Integer.parseInt(page.get("size").toString());
+    private boolean isValidSortField(Class<?> entityClass, String fieldName) {
+        try {
+            // check fieldName exist on class entity
+            Field field = entityClass.getDeclaredField(fieldName);
+            return field != null;
+        } catch (NoSuchFieldException e) {
+            return false;
         }
-
-        if (page.containsKey("sort") && page.get("sort") != "") {
-            sortPage = String.valueOf(page.get("sort"));
-            return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Order.asc(sortPage)));
-        }
-
-        return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Order.desc(sortPage)));
-
     }
 
 }
