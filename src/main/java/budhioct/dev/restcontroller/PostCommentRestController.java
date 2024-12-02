@@ -38,7 +38,7 @@ public class PostCommentRestController {
     }
 
     @GetMapping(
-            path = "/post/{post_id}/post-comment/{post_comment_id}",
+            path = "/post/{post_id}/post-comment/{post_comment_id}/detail",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public RestResponse.object<PostCommentDTO.PostCommentResponseDetailDTO> detailPostComment(@PathVariable(name = "post_id") long post_id,
@@ -68,6 +68,23 @@ public class PostCommentRestController {
                 .data(postCommentResponse)
                 .status_code(Constants.OK)
                 .message(Constants.CREATE_MESSAGE)
+                .build();
+    }
+
+    @DeleteMapping(
+            path = "/post/{post_id}/post-comment/{post_comment_id}/remove",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<String> removePostComment(@PathVariable(name = "post_id") long post_id,
+                                                         @PathVariable(name = "post_comment_id") long post_comment_id,
+                                                         PostCommentDTO.PostCommentRequestDetailDTO request) {
+        request.setPost_id(post_id);
+        request.setPost_comment_id(post_comment_id);
+        postCommentService.removePostComment(request);
+        return RestResponse.object.<String>builder()
+                .data("")
+                .status_code(Constants.OK)
+                .message(Constants.DELETE_MESSAGE)
                 .build();
     }
 

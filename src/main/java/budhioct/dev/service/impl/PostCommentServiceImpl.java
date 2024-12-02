@@ -70,4 +70,19 @@ public class PostCommentServiceImpl implements PostCommentService {
         return PostCommentDTO.toPostCommentResp(post_comment);
     }
 
+    @Transactional
+    public void removePostComment(PostCommentDTO.PostCommentRequestDetailDTO request) {
+        validation.validate(request);
+
+        PostEntity post = postRepository
+                .findFirstById(request.getPost_id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post not found"));
+
+        PostCommentEntity post_comment = postCommentRepository
+                .findFirstByPostsAndId(post, request.getPost_comment_id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "post comment not found"));
+
+        postCommentRepository.delete(post_comment);
+    }
+
 }
