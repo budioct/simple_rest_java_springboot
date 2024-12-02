@@ -2,6 +2,8 @@ package budhioct.dev.dto;
 
 import budhioct.dev.entity.PostCommentEntity;
 import budhioct.dev.entity.PostEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -55,6 +57,16 @@ public class PostCommentDTO {
     public static class PostCommentRequestDetailDTO {
         @NotNull private Long post_comment_id;
         @NotNull private Long post_id;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostCommentRequestDTO {
+        @JsonIgnore private Long post_id;
+        @NotBlank private String review;
     }
 
     public static PostCommentResponseDTO toPostCommentResp(PostCommentEntity postComment) {

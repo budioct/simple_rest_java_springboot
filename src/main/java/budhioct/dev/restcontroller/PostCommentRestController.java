@@ -55,4 +55,20 @@ public class PostCommentRestController {
 
     }
 
+    @PostMapping(
+            path = "/post/{post_id}/post-comment/create",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<PostCommentDTO.PostCommentResponseDTO> createPostComment(@PathVariable(name = "post_id") long post_id,
+                                                                                        @RequestBody PostCommentDTO.PostCommentRequestDTO request) {
+        request.setPost_id(post_id);
+        PostCommentDTO.PostCommentResponseDTO postCommentResponse = postCommentService.createPostComment(request);
+        return RestResponse.object.<PostCommentDTO.PostCommentResponseDTO>builder()
+                .data(postCommentResponse)
+                .status_code(Constants.OK)
+                .message(Constants.CREATE_MESSAGE)
+                .build();
+    }
+
 }

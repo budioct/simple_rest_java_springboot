@@ -8,4 +8,5 @@ import java.util.Map;
 public interface PostCommentService {
     Page<PostCommentDTO.PostCommentResponseDTO> getPostComments(Map<String, Object> filter);
     PostCommentDTO.PostCommentResponseDetailDTO detailPostComment(PostCommentDTO.PostCommentRequestDetailDTO request);
+    PostCommentDTO.PostCommentResponseDTO createPostComment(PostCommentDTO.PostCommentRequestDTO request);
 }
