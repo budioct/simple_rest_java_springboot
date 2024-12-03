@@ -55,10 +55,10 @@ public class PostRestController {
             path = "/{id}/detail",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public RestResponse.object<PostDTO.PostResponseDTO> detailPost(@PathVariable(name = "id") long id, PostDTO.PostRequestDetailDTO request){
+    public RestResponse.object<PostDTO.PostResponseDetailDTO> detailPost(@PathVariable(name = "id") long id, PostDTO.PostRequestDetailDTO request){
         request.setId(id);
-        PostDTO.PostResponseDTO postResponse = postService.detailPost(request);
-        return RestResponse.object.<PostDTO.PostResponseDTO>builder()
+        PostDTO.PostResponseDetailDTO postResponse = postService.detailPost(request);
+        return RestResponse.object.<PostDTO.PostResponseDetailDTO>builder()
                 .data(postResponse)
                 .status_code(Constants.OK)
                 .message(Constants.ITEM_EXIST_MESSAGE)
