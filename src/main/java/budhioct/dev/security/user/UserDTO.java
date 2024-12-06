@@ -2,6 +2,7 @@ package budhioct.dev.security.user;
 
 import budhioct.dev.security.role.Role;
 import budhioct.dev.utilities.annotation.ValidRole;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -34,6 +35,30 @@ public class UserDTO {
         @NotBlank
         @ValidRole(enumClass = Role.class, message = "Invalid role")
         private String role;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class LoginResponse {
+        @JsonProperty("expires_in_minutes")
+        private long expiresIn;
+        @JsonProperty("role_is")
+        private Role role;
+        @JsonProperty("access_token")
+        private String accessToken;
+        @JsonProperty("refresh_token")
+        private String refreshToken;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class LoginRequest {
+        @NotBlank
+        private String email;
+        @NotBlank
+        private String password;
     }
 
     public static RegisterResponse toRegisterResponse(UserEntity user){

@@ -35,4 +35,18 @@ public class UserRestController {
         return new ResponseEntity<>(build, HttpStatus.CREATED);
     }
 
+    @PostMapping(
+            path = "/login",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<UserDTO.LoginResponse> login(@RequestBody UserDTO.LoginRequest request) {
+        UserDTO.LoginResponse loginResponse = userService.login(request);
+        return RestResponse.object.<UserDTO.LoginResponse>builder()
+                .data(loginResponse)
+                .status_code(Constants.OK)
+                .message(Constants.AUTH_LOGIN_MESSAGE)
+                .build();
+    }
+
 }
