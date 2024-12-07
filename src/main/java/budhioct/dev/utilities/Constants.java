@@ -31,6 +31,7 @@ public class Constants {
     public static final String REGISTER_MESSAGE = "Account has been registered";
     public static final String UPLOAD_ITEM_AVATAR = "Avatar successfully uploaded";
     public static final String AUTH_LOGIN_MESSAGE = "Successfully logged in";
+    public static final String AUTH_REFRESH_TOKEN_MESSAGE = "Successfully refresh token";
     public static final String AUTH_LOGOUT_MESSAGE = "Successfully logged out";
     public static final String NOT_FOUND_MESSAGE = "The item does not exist";
     public static final String NOT_AUTH_MESSAGE = "Authentication credentials were missing or incorrect";
