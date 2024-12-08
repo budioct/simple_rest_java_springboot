@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +67,21 @@ public class UserRestController {
                 .message(Constants.AUTH_REFRESH_TOKEN_MESSAGE)
                 .data(loginResponse)
                 .build();
+    }
 
+    @PostMapping(
+            path = "/change-password",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RestResponse.object<String> changePassword(@RequestBody UserDTO.ChangePasswordRequest request,
+                                                      @AuthenticationPrincipal UserDetails userDetails) {
+        userService.changePassword(request, userDetails);
+        return RestResponse.object.<String>builder()
+                .status_code(Constants.OK)
+                .message(Constants.AUTH_CHANGE_PASSWORD_MESSAGE)
+                .data("")
+                .build();
     }
 
 }

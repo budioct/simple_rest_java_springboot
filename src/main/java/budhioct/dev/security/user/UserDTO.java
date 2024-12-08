@@ -61,6 +61,24 @@ public class UserDTO {
         private String password;
     }
 
+    @Getter
+    @Setter
+    @Builder
+    public static class ChangePasswordRequest {
+        @NotBlank
+        @Size(min = 8, max = 255)
+        @JsonProperty("current_password")
+        private String currentPassword;
+        @NotBlank
+        @Size(min = 8, max = 255)
+        @JsonProperty("new_password")
+        private String newPassword;
+        @NotBlank
+        @Size(min = 8, max = 255)
+        @JsonProperty("confirmation_password")
+        private String confirmationPassword;
+    }
+
     public static RegisterResponse toRegisterResponse(UserEntity user){
         return RegisterResponse.builder()
                 .email(user.getEmail())
