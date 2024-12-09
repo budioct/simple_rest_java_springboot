@@ -80,36 +80,44 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserDTO.LoginResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        UserDTO.LoginResponse data = null;
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null;
-        }
-
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-
-        if (userEmail != null) {
-            UserEntity user = this.userRepository.findFirstByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                String accessToken = jwtService.generateToken(user);
-                long minutes = TimeUnit.MILLISECONDS.toMinutes(jwtExpirationMs);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-
-                data = UserDTO.LoginResponse.builder()
-                        .expiresIn(minutes)
-                        .role(user.getRole())
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
+        try {
+            final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                throw new RuntimeException("Forbidden, Bearer is null");
             }
+
+            final String jwt_token = authHeader.substring(7);
+            TokenEntity store_token = tokenRepository.findFirstByToken(jwt_token)
+                    .orElseThrow(() -> new RuntimeException("Forbidden, Bearer token is not found"));
+
+            if (store_token.isExpired() || store_token.isRevoked()) {
+                throw new RuntimeException("Forbidden, Bearer token is expired or revoked");
+            }
+
+            UserDTO.LoginResponse data = null;
+            final String user_email = jwtService.extractUsername(jwt_token);
+            if (user_email != null) {
+                UserEntity user = this.userRepository.findFirstByEmail(user_email)
+                        .orElseThrow(() -> new RuntimeException("Forbidden, User is not found"));
+                if (jwtService.isTokenValid(jwt_token, user)) {
+                    String accessToken = jwtService.generateToken(user);
+                    long minutes = TimeUnit.MILLISECONDS.toMinutes(jwtExpirationMs);
+                    revokeAllUserTokens(user);
+                    saveUserToken(user, accessToken);
+
+                    data = UserDTO.LoginResponse.builder()
+                            .expiresIn(minutes)
+                            .role(user.getRole())
+                            .accessToken(accessToken)
+                            .refreshToken(jwt_token)
+                            .build();
+                }
+            }
+            return data;
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
         }
-        return data;
     }
 
     @Transactional
