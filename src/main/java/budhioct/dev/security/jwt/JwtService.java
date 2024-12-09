@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +31,6 @@ public class JwtService {
     @Value("${app.jwt.refreshTokenExpirationMs}")
     private long refreshTokenExpirationMs;
     private KeyPair keyPair;
-
-    @PostConstruct
-    private void init() {
-        this.keyPair = generateKeyPair();
-    }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
@@ -107,6 +106,49 @@ public class JwtService {
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error while generating ECDSA KeyPair", e);
+        }
+    }
+
+    //@PostConstruct
+    //private void init() {
+    //    this.keyPair = generateKeyPair();
+    //}
+
+    @PostConstruct
+    private void init() {
+        File privateKeyFile = new File("privateKey.pem");
+        File publicKeyFile = new File("publicKey.pem");
+
+        if (privateKeyFile.exists() && publicKeyFile.exists()) {
+            this.keyPair = loadKeyPair(privateKeyFile, publicKeyFile);
+        } else {
+            this.keyPair = generateKeyPair();
+            saveKeyPair(privateKeyFile, publicKeyFile, this.keyPair);
+        }
+    }
+
+    private void saveKeyPair(File privateKeyFile, File publicKeyFile, KeyPair keyPair) {
+        try (FileWriter privateWriter = new FileWriter(privateKeyFile);
+             FileWriter publicWriter = new FileWriter(publicKeyFile)) {
+            privateWriter.write(Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
+            publicWriter.write(Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving KeyPair", e);
+        }
+    }
+
+    private KeyPair loadKeyPair(File privateKeyFile, File publicKeyFile) {
+        try {
+            byte[] privateKeyBytes = Base64.getDecoder().decode(Files.readString(privateKeyFile.toPath()));
+            byte[] publicKeyBytes = Base64.getDecoder().decode(Files.readString(publicKeyFile.toPath()));
+
+            KeyFactory keyFactory = KeyFactory.getInstance("EC");
+            PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+            PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+
+            return new KeyPair(publicKey, privateKey);
+        } catch (Exception e) {
+            throw new RuntimeException("Error loading KeyPair", e);
         }
     }
 
