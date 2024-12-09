@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -80,17 +79,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserDTO.LoginResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final String authHeder = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public UserDTO.LoginResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
         UserDTO.LoginResponse data = null;
 
-        if (authHeder == null || !authHeder.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
 
-        refreshToken = authHeder.substring(7);
+        refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
 
         if (userEmail != null) {
