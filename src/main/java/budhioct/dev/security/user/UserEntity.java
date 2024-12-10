@@ -1,5 +1,6 @@
 package budhioct.dev.security.user;
 
+import budhioct.dev.entity.PostEntity;
 import budhioct.dev.security.role.Role;
 import budhioct.dev.security.token.TokenEntity;
 import jakarta.persistence.*;
@@ -42,6 +43,8 @@ public class UserEntity implements UserDetails {
     private LocalDateTime updateAt;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TokenEntity> tokens;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostEntity> posts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

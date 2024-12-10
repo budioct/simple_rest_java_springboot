@@ -1,6 +1,7 @@
 package budhioct.dev.entity;
 
 
+import budhioct.dev.security.user.UserEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
@@ -42,5 +43,8 @@ public class PostEntity {
     private boolean deleteAt = Boolean.FALSE;
     @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
     private List<PostCommentEntity> post_comments;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
 
 }
