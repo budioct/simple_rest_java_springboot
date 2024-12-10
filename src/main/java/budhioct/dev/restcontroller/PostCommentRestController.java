@@ -7,6 +7,7 @@ import budhioct.dev.utilities.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
 public class PostCommentRestController {
 
     @Autowired private PostCommentService postCommentService;
@@ -22,6 +24,7 @@ public class PostCommentRestController {
             path = "/post-comment/fetch",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAnyAuthority('user:read', 'management:read', 'admin:read')")
     public RestResponse.list<List<PostCommentDTO.PostCommentResponseDTO>> getPostComments(@RequestBody Map<String, Object> filter) {
         Page<PostCommentDTO.PostCommentResponseDTO> postCommentResponse = postCommentService.getPostComments(filter);
         return RestResponse.list.<List<PostCommentDTO.PostCommentResponseDTO>>builder()
@@ -41,6 +44,7 @@ public class PostCommentRestController {
             path = "/post/{post_id}/post-comment/{post_comment_id}/detail",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAnyAuthority('user:read', 'management:read', 'admin:read')")
     public RestResponse.object<PostCommentDTO.PostCommentResponseDetailDTO> detailPostComment(@PathVariable(name = "post_id") long post_id,
                                                                                               @PathVariable(name = "post_comment_id") long post_comment_id,
                                                                                               PostCommentDTO.PostCommentRequestDetailDTO request) {
@@ -60,6 +64,7 @@ public class PostCommentRestController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAnyAuthority('user:create', 'management:create', 'admin:create')")
     public RestResponse.object<PostCommentDTO.PostCommentResponseDTO> createPostComment(@PathVariable(name = "post_id") long post_id,
                                                                                         @RequestBody PostCommentDTO.PostCommentRequestDTO request) {
         request.setPost_id(post_id);
@@ -75,6 +80,7 @@ public class PostCommentRestController {
             path = "/post/{post_id}/post-comment/{post_comment_id}/remove",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAnyAuthority('management:delete', 'admin:delete')")
     public RestResponse.object<String> removePostComment(@PathVariable(name = "post_id") long post_id,
                                                          @PathVariable(name = "post_comment_id") long post_comment_id,
                                                          PostCommentDTO.PostCommentRequestDetailDTO request) {
