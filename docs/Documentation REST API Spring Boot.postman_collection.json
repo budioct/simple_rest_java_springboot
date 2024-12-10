@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "53c09f81-a39e-4efc-91ba-a99109f29d5c",
+		"name": "Documentation REST API Spring Boot",
+		"description": "**Post and Post Comment API**  \nThis project is a RESTful API for managing posts and comments, developed using Spring Boot and MySQL. The application allows users to create, read, update, and delete posts and their associated comments, with functionalities including user authentication and authorization, and performance testing.\n\n- Created by Budhi Octaviansyah\n    \n- GitHub : [https://github.com/budioct](https://github.com/budioct)\n    \n- Email : [budioct@gmail.com](https://budioct@gmail.com)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7284698"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"budhi@test.com\",\r\n    \"password\" : \"password\",\r\n    \"role\" : \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						},
+						"description": "The `POST /api/v1/auth/register` endpoint is used to register a new user with the provided email, password, and role.\n\n### Request Body\n\n- `email` (string, required): The email address of the user.\n    \n- `password` (string, required): The password for the user account.\n    \n- `role` (string, required): The role of the user (e.g., ADMIN, USER).\n    \n\n### Response\n\nThe response is in JSON format and has the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": [\"array\", \"null\"],\n            \"items\": {}\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"email\": {\n                    \"type\": \"string\"\n                },\n                \"role\": {\n                    \"type\": \"string\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"budhi@test.com\",\r\n    \"password\" : \"password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "### Auth Login\n\nThis endpoint is used to authenticate and log in a user.\n\n#### Request Body\n\n- email (text, required): The email address of the user.\n    \n- password (text, required): The password of the user.\n    \n\n#### Response\n\nThe response of this request can be documented as a JSON schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status_code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": [\"array\", \"null\"]\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"expires_in_minutes\": {\n          \"type\": \"integer\"\n        },\n        \"role_is\": {\n          \"type\": \"string\"\n        },\n        \"access_token\": {\n          \"type\": \"string\"\n        },\n        \"refresh_token\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh-Token User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzczNiwiZXhwIjoxNzM0NjY3NzM2fQ.AZ8luevfBlqDNaubpWFQWDamUErw4rC3n0t7Tj4yjQsqemZ88reOFB3ZGl3kUQTn3YChyGZTizKM1t2IFmASUuzqAWWQJObIOImNnUv8YFmsGYFH2kypWQeNhn3HDFqRu2qYvtZbej_Twz2VU2hsN8lWAQs50u0w6lRIUifbrXkWgc-Z",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh-token"
+							]
+						},
+						"description": "The endpoint allows the user to refresh their authentication token by sending an HTTP POST request to the specified URL.\n\nThe response of the request can be documented as a JSON schema as follows:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": \"null\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"expires_in_minutes\": {\n                    \"type\": \"integer\"\n                },\n                \"role_is\": {\n                    \"type\": \"string\"\n                },\n                \"access_token\": {\n                    \"type\": \"string\"\n                },\n                \"refresh_token\": {\n                    \"type\": \"string\"\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Change-Password User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"current_password\" : \"password1\",\r\n    \"new_password\" : \"password\",\r\n    \"confirmation_password\" : \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/change-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"change-password"
+							]
+						},
+						"description": "This endpoint allows the user to change their password by sending a POST request to the specified URL. The request should include the current password, the new password, and the confirmation of the new password.\n\n### Request Body\n\n- `current_password` (string): The current password of the user.\n    \n- `new_password` (string): The new password that the user wants to set.\n    \n- `confirmation_password` (string): Confirmation of the new password.\n    \n\n### Response\n\nThe response to this request is in JSON format and includes the following fields:\n\n- `status_code` (number): The status code of the response.\n    \n- `message` (string): A message related to the response.\n    \n- `errors` (null): Any errors that occurred during the request, if applicable.\n    \n- `data` (string): Additional data related to the response.\n    \n\n### JSON Schema\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"number\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": \"null\"\n        },\n        \"data\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzc0NSwiZXhwIjoxNzM0NjY3NzQ1fQ.AXoMAzhBuS87bOB_0j4nEQ4KFhBAuJJI_EfkciPFm-0z_XP2r1-Ne6ykm8EcNkIObUfBR44j6ls4SR0m3g5FBTZcAAlv-_b3HO9e2ugsU7FoTizRgw8nj2WELn1l3oTted_PnP13NFKVkG8rqtGK1AXeYghtSo9NSJ4UY7TtyElCNv2W",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "The `POST /api/v1/auth/logout` endpoint is used to log out the user from the application. Upon successful execution, the API returns a response with status code 200 and Content-Type as text/xml. As per the user's request, the response can be documented as a JSON schema. However, since the response data is not provided, the JSON schema for the response cannot be generated without the actual response data."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Get Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\" : \"\",\r\n    \"size\" : \"\",\r\n    \"sort\" : \"\",\r\n    \"id\" : \"\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post/fetch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"fetch"
+							]
+						},
+						"description": "### API Request Description\n\nThis endpoint makes an HTTP GET request to fetch post data.\n\n### API Response (JSON Schema)\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": [\"array\", \"null\"]\n        },\n        \"paging\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"currentPage\": {\n                    \"type\": \"integer\"\n                },\n                \"totalPage\": {\n                    \"type\": \"integer\"\n                },\n                \"sizePage\": {\n                    \"type\": \"integer\"\n                }\n            }\n        },\n        \"total_data\": {\n            \"type\": \"integer\"\n        },\n        \"list\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"id\": {\n                        \"type\": \"integer\"\n                    },\n                    \"title\": {\n                        \"type\": \"string\"\n                    },\n                    \"createdAt\": {\n                        \"type\": \"string\"\n                    },\n                    \"updatedAt\": {\n                        \"type\": [\"string\", \"null\"]\n                    }\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Posts Visibility",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaW9jdGFAdGVzdC5jb20iLCJpYXQiOjE3MzM0NDYwNjQsImV4cCI6MTczNDMxMDA2NH0.AFfHCK3kggchP8afzCJa54Xq_faiwR3X391tfi_j3axXHG40hQ9JYNc9Obxur1kLjD-2Z3xtMVN51lyrLCCVBdyLAAqa-KTZdPFsc7xsRm1bZbGzyZ49eZQuj4pBs3CdN-fDUvFZUNcW6aVJeUY5vMJskyFyNJCnl7DOVBUuzsg8OBHk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\" : \"\",\r\n    \"size\" : \"\",\r\n    \"sort\" : \"\",\r\n    \"createdAt\" : \"\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post/fetch-visibility?visibility=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"fetch-visibility"
+							],
+							"query": [
+								{
+									"key": "visibility",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/post/1/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"1",
+								"detail"
+							]
+						},
+						"description": "### Retrieve Post Detail\n\nThe API endpoint retrieves the details of a specific post with ID 1.\n\n#### Request\n\n- Method: GET\n    \n- URL: `http://localhost:8080/api/post/1/detail`\n    \n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": \"null\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"title\": {\n                    \"type\": \"string\"\n                },\n                \"post_comments\": {\n                    \"type\": \"array\"\n                },\n                \"createdAt\": {\n                    \"type\": \"string\"\n                },\n                \"updatedAt\": {\n                    \"type\": [\"string\", \"null\"]\n                }\n            }\n        }\n    }\n}\n\n ```\n\nThe response for this request can be documented as a JSON schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": \"null\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"title\": {\n                    \"type\": \"string\"\n                },\n                \"post_comments\": {\n                    \"type\": \"array\"\n                },\n                \"createdAt\": {\n                    \"type\": \"string\"\n                },\n                \"updatedAt\": {\n                    \"type\": [\"string\", \"null\"]\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"makan tidur\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"create"
+							]
+						},
+						"description": "The endpoint `http://localhost:8080/api/post/create` is a POST request to create a new post. The request body should contain a JSON object with a \"title\" field.\n\n### Request Body\n\n- title (string, required): The title of the post.\n    \n\n### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status_code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": \"null\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"createdAt\": {\n          \"type\": \"string\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"makan sore update\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post/1/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"1",
+								"update"
+							]
+						},
+						"description": "The `PUT /api/post/1/update` endpoint is used to update a specific post with the provided payload.\n\n### Request Body\n\n- The request body should be in raw format with JSON type, and should contain the `title` parameter.\n    \n\nExample:\n\n``` json\n{\n    \"title\": \"makan sore update\"\n}\n\n ```\n\n### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": [\"array\", \"null\"]\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"title\": {\n                    \"type\": \"string\"\n                },\n                \"createdAt\": {\n                    \"type\": \"string\"\n                },\n                \"updatedAt\": {\n                    \"type\": [\"string\", \"null\"]\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/post/5/remove",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"5",
+								"remove"
+							]
+						},
+						"description": "The API endpoint sends an HTTP DELETE request to remove the post with ID 5. Upon successful execution, the response will be in JSON format and will adhere to the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status_code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": [\"array\", \"null\"]\n    },\n    \"data\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post Comment",
+			"item": [
+				{
+					"name": "Get Post Comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\" : \"\",\r\n    \"size\" : \"\",\r\n    \"sort\" : \"\",\r\n    \"createdAt\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post-comment/fetch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post-comment",
+								"fetch"
+							]
+						},
+						"description": "### API Request Description\n\nThis endpoint is used to fetch comments on a post.\n\n### API Response (application/json)\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status_code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": \"null\"\n    },\n    \"paging\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"currentPage\": {\n          \"type\": \"integer\"\n        },\n        \"totalPage\": {\n          \"type\": \"integer\"\n        },\n        \"sizePage\": {\n          \"type\": \"integer\"\n        }\n      }\n    },\n    \"total_data\": {\n      \"type\": \"integer\"\n    },\n    \"list\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"id\": {\n            \"type\": \"integer\"\n          },\n          \"post_id\": {\n            \"type\": \"integer\"\n          },\n          \"review\": {\n            \"type\": \"string\"\n          },\n          \"createdAt\": {\n            \"type\": \"string\"\n          },\n          \"updatedAt\": {\n            \"type\": [\"string\", \"null\"]\n          }\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Post Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/post/1/post-comment/1/detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"1",
+								"post-comment",
+								"1",
+								"detail"
+							]
+						},
+						"description": "The endpoint retrieves the details of a specific comment on a post with the given IDs.\n\nThe response schema is as follows:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"status_code\": {\n            \"type\": \"integer\"\n        },\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"errors\": {\n            \"type\": \"null\"\n        },\n        \"data\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"id\": {\n                    \"type\": \"integer\"\n                },\n                \"post\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"id\": {\n                            \"type\": \"integer\"\n                        },\n                        \"title\": {\n                            \"type\": \"string\"\n                        },\n                        \"createdAt\": {\n                            \"type\": \"string\"\n                        },\n                        \"updatedAt\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"review\": {\n                    \"type\": \"string\"\n                },\n                \"createdAt\": {\n                    \"type\": \"string\"\n                },\n                \"updatedAt\": {\n                    \"type\": [\"string\", \"null\"]\n                }\n            }\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\": \"pasti makan sore anda lezat!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/post/1/post-comment/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"1",
+								"post-comment",
+								"create"
+							]
+						},
+						"description": "### Create Post Comment\n\nThis endpoint allows the user to create a comment for a specific post.\n\n#### Request Body\n\n- `review` (string, required): The review content for the post comment.\n    \n\n#### Response\n\nThe response will be in the form of a JSON schema with the following structure:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"status_code\": {\n      \"type\": \"integer\"\n    },\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"errors\": {\n      \"type\": \"null\"\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"id\": {\n          \"type\": \"integer\"\n        },\n        \"post_id\": {\n          \"type\": \"integer\"\n        },\n        \"review\": {\n          \"type\": \"string\"\n        },\n        \"createdAt\": {\n          \"type\": \"string\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Post Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJzdWIiOiJidWRoaUB0ZXN0LmNvbSIsImlhdCI6MTczMzgwMzk5OCwiZXhwIjoxNzM0NjY3OTk4fQ.AIhraBowbYAwDNbSrkdRM_tFldXiQFG4gbL_CcumuKEQr6FxnTrBH8bQJe0fY4Xx9-JyqS5IERc_XKtfEkxjE8rxAe_TWJKg3aZNvC-LFlOvbGpASFJAOZdGhm_NHJt2w0wGs8XM2sM_xqbJPoUCSYCWG89L6x7i__BkX6EjSKULlDl6",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/post/1/post-comment/3/remove",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"post",
+								"1",
+								"post-comment",
+								"3",
+								"remove"
+							]
+						},
+						"description": "The API endpoint sends an HTTP DELETE request to remove a comment with ID 3 from the post with ID 1.\n\n### Response\n\nThe response is in JSON format and has the following schema:\n\n- status_code (number): The status code of the response.\n    \n- message (string): Any message related to the response.\n    \n- errors (null): Any errors encountered during the request.\n    \n- data (string): Additional data related to the response.\n    \n\nExample:\n\n``` json\n{\n    \"status_code\": 0,\n    \"message\": \"\",\n    \"errors\": null,\n    \"data\": \"\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
