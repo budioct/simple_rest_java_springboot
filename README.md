@@ -2,10 +2,6 @@
 
 This project is a sample RESTful API developed with Java Spring Boot and MySQL, focusing on a case study of managing posts and comments. Users can create posts, comment on posts, and interact with the system using a robust authentication and authorization mechanism implemented with Spring Security and role-based access control.
 
-- **Created by**: Budhi Octaviansyah
-- **GitHub**: [https://github.com/budioct](https://github.com/budioct)
-- **Email**: budioct@gmail.com
-
 ---
 
 ## Prerequisites
